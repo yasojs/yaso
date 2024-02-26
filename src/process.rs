@@ -4,7 +4,7 @@ use crate::utils::export_default;
 
 use rquickjs::function::Func;
 use rquickjs::module::{Declarations, Exports, ModuleDef};
-use rquickjs::{Ctx, Result as QuickJsResult};
+use rquickjs::{Array, BigInt, Ctx, Function, Result as QuickJsResult};
 
 pub fn cwd() -> String {
     std::env::current_dir()
@@ -21,6 +21,30 @@ pub fn get_platform() -> &'static str {
     std::env::consts::OS
 }
 
+fn hr_time_big_int(ctx: Ctx<'_>) -> QuickJsResult<BigInt> {
+    let starting_time = unsafe { crate::STARTING_TIME.assume_init() };
+
+    let elapsed = starting_time.elapsed().as_nanos() as u64;
+
+    BigInt::from_u64(ctx, elapsed)
+}
+
+fn hr_time(ctx: Ctx<'_>) -> QuickJsResult<Array<'_>> {
+    let starting_time = unsafe { crate::STARTING_TIME.assume_init() };
+
+    let elapsed = starting_time.elapsed().as_nanos() as u64;
+
+    let seconds = elapsed / 1_000_000_000;
+    let remaining_nanos = elapsed % 1_000_000_000;
+
+    let array = Array::new(ctx)?;
+
+    array.set(0, seconds)?;
+    array.set(1, remaining_nanos)?;
+
+    Ok(array)
+}
+
 pub struct ProcessModule;
 
 impl ModuleDef for ProcessModule {
@@ -30,6 +54,7 @@ impl ModuleDef for ProcessModule {
         declare.declare("cwd")?;
         declare.declare("arch")?;
         declare.declare("platform")?;
+        declare.declare("hrtime")?;
         declare.declare("exit")?;
         declare.declare("default")?;
 
@@ -41,12 +66,16 @@ impl ModuleDef for ProcessModule {
 
         let env: HashMap<String, String> = std::env::vars().collect();
 
+        let hrtime = Function::new(ctx.clone(), hr_time)?;
+        hrtime.set("bigint", Func::from(hr_time_big_int))?;
+
         export_default(ctx, exports, |default| {
             default.set("argv", argv)?;
             default.set("env", env)?;
             default.set("cwd", Func::from(cwd))?;
             default.set("arch", get_arch())?;
             default.set("platform", get_platform())?;
+            default.set("hrtime", hrtime)?;
             default.set(
                 "exit",
                 Func::from(|status_code: i32| std::process::exit(status_code)),

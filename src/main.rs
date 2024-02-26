@@ -1,9 +1,12 @@
 use yaso::cli::{Command, CLI};
 use yaso::vm::VirtualMachine;
+use yaso::STARTING_TIME;
 
 use clap::Parser;
 
 use std::process::exit;
+use std::time::Instant;
+
 
 #[tokio::main]
 pub async fn main() {
@@ -16,6 +19,8 @@ pub async fn main() {
 
                 exit(1);
             }
+
+            unsafe { STARTING_TIME.write(Instant::now()) };
 
             let vm = VirtualMachine::new().await;
 
