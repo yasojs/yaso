@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::utils::export_default;
+use crate::module::export_default;
 
 use rquickjs::function::Func;
 use rquickjs::module::{Declarations, Exports, ModuleDef};

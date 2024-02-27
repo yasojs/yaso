@@ -1,6 +1,6 @@
 mod file;
 
-use crate::utils::export_default;
+use crate::module::export_default;
 
 use rquickjs::function::{Async, Func, Opt};
 use rquickjs::module::{Declarations, Exports, ModuleDef};
