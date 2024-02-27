@@ -9,3 +9,6 @@ libc = "0.2"
 once_cell = "1"
 rquickjs = { version = "0.5", features = ["bindgen", "full-async", "rust-alloc"] }
 tokio = { version = "1", features = ["full"] }
+
+[profile.release]
+strip = true
