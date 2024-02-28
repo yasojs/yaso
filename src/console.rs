@@ -64,7 +64,19 @@ pub fn js_stringify(value: &Value<'_>) -> QuickJsResult<String> {
             result.push('n');
         }
 
-        Type::Float => result = value.as_float().unwrap().to_string(),
+        Type::Float => {
+            let float = value.as_float().unwrap();
+
+            if float.is_infinite() {
+                if float.is_sign_negative() {
+                    result.push_str("-");
+                }
+
+                result.push_str("Infinity");
+            } else {
+                result = float.to_string();
+            }
+        }
 
         Type::Array => {
             let array = value.as_array().unwrap();
