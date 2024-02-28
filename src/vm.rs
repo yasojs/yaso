@@ -1,3 +1,4 @@
+use crate::events::EventsModule;
 use crate::fs::FsModule;
 use crate::os::OsModule;
 use crate::path::PathModule;
@@ -26,6 +27,7 @@ macro_rules! create_modules {
 }
 
 create_modules!(
+    "events" => EventsModule,
     "fs" => FsModule,
     "os" => OsModule,
     "path" => PathModule,

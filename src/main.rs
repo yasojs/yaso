@@ -7,7 +7,6 @@ use clap::Parser;
 use std::process::exit;
 use std::time::Instant;
 
-
 #[tokio::main]
 pub async fn main() {
     let cli = CLI::parse();
