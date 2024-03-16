@@ -1,6 +1,6 @@
 use yaso::cli::{Command, CLI};
 use yaso::vm::VirtualMachine;
-use yaso::STARTING_TIME;
+use yaso::START_TIME;
 
 use clap::Parser;
 
@@ -19,7 +19,7 @@ pub async fn main() {
                 exit(1);
             }
 
-            unsafe { STARTING_TIME.write(Instant::now()) };
+            unsafe { START_TIME.write(Instant::now()) };
 
             let vm = VirtualMachine::new().await;
 

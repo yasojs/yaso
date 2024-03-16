@@ -1,7 +1,7 @@
 use std::mem::MaybeUninit;
 use std::time::Instant;
 
-pub static mut STARTING_TIME: MaybeUninit<Instant> = MaybeUninit::uninit();
+pub static mut START_TIME: MaybeUninit<Instant> = MaybeUninit::uninit();
 
 pub mod cli;
 pub mod console;

@@ -22,17 +22,17 @@ pub fn get_platform() -> &'static str {
 }
 
 fn hr_time_big_int(ctx: Ctx<'_>) -> QuickJsResult<BigInt> {
-    let starting_time = unsafe { crate::STARTING_TIME.assume_init() };
+    let start_time = unsafe { crate::START_TIME.assume_init() };
 
-    let elapsed = starting_time.elapsed().as_nanos() as u64;
+    let elapsed = start_time.elapsed().as_nanos() as u64;
 
     BigInt::from_u64(ctx, elapsed)
 }
 
 fn hr_time(ctx: Ctx<'_>) -> QuickJsResult<Array<'_>> {
-    let starting_time = unsafe { crate::STARTING_TIME.assume_init() };
+    let start_time = unsafe { crate::START_TIME.assume_init() };
 
-    let elapsed = starting_time.elapsed().as_nanos() as u64;
+    let elapsed = start_time.elapsed().as_nanos() as u64;
 
     let seconds = elapsed / 1_000_000_000;
     let remaining_nanos = elapsed % 1_000_000_000;
